@@ -1,29 +1,84 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login - Secure Access</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome for Icons (Latest Version) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- GSAP Animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
+<body class="bg-gradient-to-r from-blue-600 to-green-500 flex items-center justify-center h-screen p-4">
 
-    <div class="bg-white shadow-lg rounded-lg p-8 max-w-md text-center">
-        <h1 class="text-2xl font-bold text-gray-800 mb-4">Login</h1>
+    <!-- Login Container -->
+    <div id="login-container" class="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md opacity-0 transform scale-90">
+        
+        <!-- Title -->
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-6">Welcome Back</h2>
+        <p class="text-gray-600 text-center mb-6">Sign in to your account</p>
 
-        <form method="post" class="flex flex-col space-y-4">
+        <!-- Login Form -->
+        <form method="POST" class="space-y-6">
             {% csrf_token %}
-            <input type="text" name="username" placeholder="Username" class="border p-2 rounded">
-            <input type="password" name="password" placeholder="Password" class="border p-2 rounded">
-            <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">
+            
+            <!-- Username Field -->
+            <div class="relative">
+                <i class="fa-solid fa-user absolute left-3 top-3 text-gray-400"></i>
+                <input type="text" name="username" placeholder="Username" required
+                    class="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            </div>
+
+            <!-- Password Field with Toggle -->
+            <div class="relative">
+                <i class="fa-solid fa-lock absolute left-3 top-3 text-gray-400"></i>
+                <input type="password" id="password" name="password" placeholder="Password" required
+                    class="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <i class="fa-solid fa-eye absolute right-3 top-3 text-gray-400 cursor-pointer" id="toggle-password"></i>
+            </div>
+
+            <!-- Forgot Password -->
+            <div class="text-right">
+                <a href="{% url 'password_reset' %}" class="text-blue-500 hover:underline text-sm">Forgot Password?</a>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" 
+                class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 font-semibold">
                 Login
             </button>
         </form>
 
-        <p class="text-gray-600 mt-4">Don't have an account? 
-            <a href="{% url 'register' %}" class="text-blue-500">Register</a>
+        <!-- Register Link -->
+        <p class="text-gray-600 text-center mt-4">
+            Don't have an account? 
+            <a href="{% url 'register' %}" class="text-blue-500 hover:underline">Sign up</a>
         </p>
     </div>
+
+    <!-- GSAP Animation -->
+    <script>
+        gsap.to("#login-container", { opacity: 1, scale: 1, duration: 1, ease: "power2.out" });
+
+        // Toggle Password Visibility
+        document.getElementById("toggle-password").addEventListener("click", function () {
+            const passwordField = document.getElementById("password");
+            const icon = this;
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+            }
+        });
+    </script>
 
 </body>
 </html>

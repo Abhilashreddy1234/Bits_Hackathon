@@ -4,31 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Document</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {},
+            },
+        };
+    </script>
+
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
+<body class="bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center min-h-screen p-4">
 
-    <div class="bg-white shadow-lg rounded-lg p-8 max-w-md">
-        <h1 class="text-2xl font-bold text-gray-800 mb-4">Upload Document</h1>
+    <div class="bg-white shadow-2xl rounded-2xl p-8 max-w-md w-full text-center transform scale-90 opacity-0" id="upload-container">
+        <h1 class="text-3xl font-extrabold text-gray-800 mb-4">Upload Your Resume</h1>
+        <p class="text-gray-600 mb-6">Submit your resume and enter a prompt to receive AI-generated feedback.</p>
 
-        <form method="post" enctype="multipart/form-data" class="space-y-4">
+        <form method="post" enctype="multipart/form-data" class="space-y-4 text-left">
             {% csrf_token %}
 
-            <!-- Document Upload -->
+            <!-- File Upload with Progress -->
             <label class="block text-gray-700 font-semibold">Upload Resume (PDF)</label>
-            {{ form.file }}
+            <div class="relative w-full border border-gray-300 rounded-lg p-3 flex items-center justify-between cursor-pointer hover:border-blue-500 transition duration-300">
+                <input type="file" name="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                <span id="file-label" class="text-gray-500">Choose a file...</span>
+                <i class="fa-solid fa-upload text-gray-400"></i>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2 hidden" id="progress-bar-container">
+                <div class="bg-blue-500 h-2.5 rounded-full w-0" id="progress-bar"></div>
+            </div>
 
             <!-- Prompt Input Field -->
             <label class="block text-gray-700 font-semibold">Enter Your Prompt</label>
-            <textarea name="prompt" class="w-full border p-2 rounded-lg" rows="3" required></textarea>
+            <textarea name="prompt" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" rows="3" required placeholder="Type your prompt here..."></textarea>
 
-            <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600">
+            <button type="submit" class="w-full bg-green-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-700 transition duration-300 font-semibold">
                 Submit
             </button>
         </form>
 
         {% if response_text %}
-            <div class="mt-4 p-4 bg-gray-200 rounded-lg">
+            <div class="mt-6 p-4 bg-gray-100 rounded-lg shadow">
                 <h2 class="text-lg font-bold text-gray-800">AI Response:</h2>
                 <p class="text-gray-700">{{ response_text }}</p>
             </div>
@@ -36,13 +59,38 @@
 
         <!-- Display Recent Prompts -->
         <h2 class="text-lg font-bold text-gray-800 mt-6">Recent Prompts</h2>
-        <ul class="list-disc list-inside text-gray-600">
+        <ul class="list-disc list-inside text-gray-600 text-left">
             {% for prompt in recent_prompts %}
                 <li>{{ prompt.text }}</li>
             {% endfor %}
         </ul>
-
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            gsap.to("#upload-container", { opacity: 1, scale: 1, duration: 1, ease: "power2.out" });
+        });
+
+        const fileInput = document.getElementById("file-input");
+        const fileLabel = document.getElementById("file-label");
+        const progressBar = document.getElementById("progress-bar");
+        const progressBarContainer = document.getElementById("progress-bar-container");
+
+        fileInput.addEventListener("change", function () {
+            if (this.files.length > 0) {
+                fileLabel.textContent = this.files[0].name;
+                progressBarContainer.classList.remove("hidden");
+                let width = 0;
+                let interval = setInterval(() => {
+                    if (width >= 100) {
+                        clearInterval(interval);
+                    } else {
+                        width += 10;
+                        progressBar.style.width = width + "%";
+                    }
+                }, 200);
+            }
+        });
+    </script>
 </body>
 </html>

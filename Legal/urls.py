@@ -18,11 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-
+from document.views import user_login 
+from document.views import home
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("document.urls")),  # Replace 'your_app' with your actual app name
+    path("", home, name="home"),  # Show home page first
+    path("document/", include("document.urls")),  # Include app URLs
 ]
+
 
 # Serve media files during development
 if settings.DEBUG:
