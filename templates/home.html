@@ -18,7 +18,12 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-r from-blue-600 to-green-500 flex items-center justify-center min-h-screen px-6">
+<body class="bg-gradient-to-r from-blue-600 to-green-500 flex items-center justify-center min-h-screen px-6 relative">
+
+    <!-- Animated Heading -->
+    <h1 id="animated-heading" class="absolute top-10 text-4xl md:text-5xl font-extrabold text-white opacity-0">
+        AI-generated Legal Drafts and Contracts
+    </h1>
 
     <div class="container mx-auto flex flex-col md:flex-row items-center justify-center w-full h-full">
 
@@ -53,6 +58,13 @@
 
     <!-- GSAP Animations -->
     <script>
+        // Animate Heading from Right to Left
+        gsap.fromTo("#animated-heading", 
+            { opacity: 0, x: 200 }, 
+            { opacity: 1, x: 0, duration: 1.5, ease: "power2.out" }
+        );
+
+        // Animate Images and Content
         gsap.to("#left-image", { opacity: 1, x: 0, duration: 1.2, ease: "power2.out" });
         gsap.to("#home-container", { opacity: 1, scale: 1, duration: 1.2, ease: "power2.out", delay: 0.5 });
         gsap.to("#right-image", { opacity: 1, x: 0, duration: 1.2, ease: "power2.out", delay: 0.8 });
