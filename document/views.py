@@ -99,3 +99,33 @@ def user_register(request):
         return redirect('login')
 
     return render(request, 'register.html')
+from django.shortcuts import render, redirect
+from .models import Case
+from .forms import CaseForm
+from django.http import JsonResponse
+
+def case_list(request):
+    cases = Case.objects.filter(user=request.user)
+    return render(request, "case_list.html", {"cases": cases})
+
+def add_case(request):
+    if request.method == "POST":
+        form = CaseForm(request.POST)
+        if form.is_valid():
+            case = form.save(commit=False)
+            case.user = request.user
+            case.save()
+            return redirect("case_list")
+    else:
+        form = CaseForm()
+    return render(request, "add_case.html", {"form": form})
+
+def get_cases(request):
+    cases = Case.objects.filter(user=request.user).values("title", "description", "date")
+    return JsonResponse(list(cases), safe=False)
+from django.shortcuts import render
+from .models import Case
+
+def upload_view(request):
+    cases = Case.objects.all()
+    return render(request, "upload.html", {"cases": cases})

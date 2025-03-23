@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Add New Case</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Save Case</button>
+</form>
+<a href="{% url 'case_list' %}" class="btn btn-secondary">Back to Calendar</a>
+{% endblock %}
