@@ -5,11 +5,15 @@ from .models import Document, Prompt
 import google.generativeai as genai  # Gemini AI
 from django.contrib.auth import authenticate, login, logout
 
-
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import User
 # Set up Google API Key
-genai.configure(api_key="AIzaSyDDK-Vaaf9V0gYabJVYoPMfX2oRBV86BkU")
+import google.generativeai as genai  # Gemini AI
+
+# Configure Google API Key using Django settings
+genai.configure(api_key=settings.GOOGLE_API_KEY)
+
 
 def home(request):
     return render(request, "home.html")

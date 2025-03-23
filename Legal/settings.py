@@ -130,4 +130,6 @@ STATICFILES_DIRS = [
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 import google.generativeai as genai
-genai.configure(api_key="AIzaSyDDK-Vaaf9V0gYabJVYoPMfX2oRBV86BkU")
+
+
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "AIzaSyDDK-Vaaf9V0gYabJVYoPMfX2oRBV86BkU") 
